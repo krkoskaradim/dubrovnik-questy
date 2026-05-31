@@ -6,151 +6,394 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Questy">
-<meta name="theme-color" content="#f5f2ed">
-<title>Rozlučka Dubrovník</title>
+<meta name="theme-color" content="#2f1b05">
+<title>Piwo Questy · Dubrovník</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f5f2ed;
-    --surface: #ffffff;
-    --border: #e0dbd3;
-    --text: #1a1714;
-    --muted: #9a9088;
-    --easy: #3a7a3a;
-    --medium: #a07010;
-    --hard: #b04020;
-    --final: #6040b0;
+    --bg-1: #1b1208;
+    --bg-2: #3a2106;
+    --beer: #f6b51f;
+    --beer-light: #ffdf73;
+    --foam: #fff7df;
+    --surface: rgba(255, 248, 225, 0.96);
+    --surface-2: rgba(255, 241, 194, 0.9);
+    --border: rgba(86, 50, 7, 0.18);
+    --text: #261606;
+    --muted: #7c5a24;
+    --green: #157347;
+    --red: #b63120;
+    --orange: #b76a00;
+    --purple: #673ab7;
+    --shadow: 0 22px 60px rgba(0,0,0,.28);
   }
-  html, body {
-    height: 100%; overflow: hidden;
-    background: var(--bg); color: var(--text);
-    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  #app { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-  /* TOP BAR */
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(circle at 18% 8%, rgba(255,222,115,.44), transparent 28%),
+      radial-gradient(circle at 85% 12%, rgba(255,255,255,.18), transparent 18%),
+      linear-gradient(145deg, var(--bg-1), var(--bg-2) 46%, #0f0904);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,.25) 0 2px, transparent 2.4px),
+      radial-gradient(circle, rgba(246,181,31,.22) 0 1.5px, transparent 2px);
+    background-size: 56px 56px, 34px 34px;
+    background-position: 8px 14px, 23px 3px;
+    opacity: .35;
+  }
+
+  #app {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+
   #topbar {
     flex-shrink: 0;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 56px 20px 14px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
+    padding: max(18px, env(safe-area-inset-top)) clamp(14px, 4vw, 28px) 12px;
+    color: #fff8dc;
   }
-  .location { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
-  #counter { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.05em; }
 
-  /* SLIDER */
+  .top-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px 13px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+    box-shadow: 0 10px 30px rgba(0,0,0,.22);
+    backdrop-filter: blur(14px);
+  }
+
+  .location {
+    display: block;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,248,220,.78);
+    font-weight: 800;
+  }
+
+  .motto {
+    display: block;
+    margin-top: 3px;
+    font-size: clamp(18px, 5vw, 26px);
+    line-height: 1;
+    font-weight: 950;
+    letter-spacing: -.04em;
+    color: #fff3bd;
+    text-shadow: 0 2px 0 rgba(0,0,0,.18);
+  }
+
+  #counter {
+    min-width: 54px;
+    padding: 9px 10px;
+    border-radius: 999px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 950;
+    letter-spacing: .05em;
+    color: #2f1b05;
+    background: linear-gradient(180deg, #fff7d1, var(--beer));
+    box-shadow: inset 0 -2px 0 rgba(92,55,0,.18), 0 8px 20px rgba(0,0,0,.18);
+  }
+
   #slider-wrap { flex: 1; overflow: hidden; position: relative; }
-  #slider { display: flex; height: 100%; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
-  .slide { min-width: 100%; height: 100%; overflow-y: auto; padding: 22px 20px 44px; -webkit-overflow-scrolling: touch; }
-
-  /* QUEST HEADER */
-  .quest-meta { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
-  .quest-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
-  .quest-title { font-size: 28px; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; flex: 1; color: var(--text); }
-  .diff-badge {
-    flex-shrink: 0; font-size: 10px; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 4px 9px; border-radius: 3px; margin-top: 4px;
+  #slider { display: flex; height: 100%; transition: transform .32s cubic-bezier(.4,0,.2,1); will-change: transform; }
+  .slide {
+    min-width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px clamp(14px, 4vw, 28px) 28px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .diff-easy   { background: #e8f4e8; color: var(--easy);   border: 1px solid #c0dcc0; }
-  .diff-medium { background: #faf0dc; color: var(--medium); border: 1px solid #e0cc90; }
-  .diff-hard   { background: #faeae4; color: var(--hard);   border: 1px solid #e0b8a8; }
-  .diff-final  { background: #eeebf8; color: var(--final);  border: 1px solid #c8bce8; }
+  .slide::-webkit-scrollbar { display: none; }
 
-  /* RESULT */
-  .result-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .quest-card {
+    min-height: calc(100% - 8px);
+    padding: clamp(16px, 4.5vw, 26px);
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,.48);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,239,187,.92)),
+      radial-gradient(circle at 80% 0%, rgba(246,181,31,.35), transparent 34%);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quest-card::before {
+    content: "🍺";
+    position: absolute;
+    right: -8px;
+    top: -18px;
+    font-size: 92px;
+    opacity: .11;
+    transform: rotate(-12deg);
+  }
+
+  .quest-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 12px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.58);
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+
+  .quest-header { display: grid; gap: 13px; margin-bottom: 16px; position: relative; z-index: 1; }
+  .quest-title {
+    font-size: clamp(31px, 10vw, 54px);
+    font-weight: 1000;
+    line-height: .94;
+    letter-spacing: -.07em;
+    color: #211306;
+  }
+  .diff-badge {
+    justify-self: start;
+    font-size: 11px;
+    font-weight: 950;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 8px 11px;
+    border-radius: 999px;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.08);
+  }
+  .diff-easy   { background: #dcf8e9; color: var(--green); border: 1px solid rgba(21,115,71,.2); }
+  .diff-medium { background: #fff0bd; color: var(--orange); border: 1px solid rgba(183,106,0,.2); }
+  .diff-hard   { background: #ffe0d8; color: var(--red); border: 1px solid rgba(182,49,32,.22); }
+  .diff-final  { background: #ede4ff; color: var(--purple); border: 1px solid rgba(103,58,183,.22); }
+
+  .result-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0 18px;
+  }
   .result-btn {
-    flex: 1; padding: 10px 0;
-    border-radius: 8px; border: 1.5px solid var(--border);
-    background: var(--surface); color: var(--muted);
-    font-size: 13px; font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    cursor: pointer; transition: all 0.15s;
+    min-height: 48px;
+    padding: 11px 10px;
+    border-radius: 17px;
+    border: 1px solid rgba(66,38,5,.16);
+    background: rgba(255,255,255,.7);
+    color: #846433;
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s, background .15s;
     -webkit-tap-highlight-color: transparent;
   }
-  .result-btn.active-done { background: #e8f4e8; border-color: #90c890; color: var(--easy); }
-  .result-btn.active-fail { background: #faeae4; border-color: #e0a898; color: var(--hard); }
+  .result-btn:active { transform: scale(.98); }
+  .result-btn.active-done { background: #ddfae8; border-color: rgba(21,115,71,.35); color: var(--green); box-shadow: 0 8px 18px rgba(21,115,71,.12); }
+  .result-btn.active-fail { background: #ffe1da; border-color: rgba(182,49,32,.35); color: var(--red); box-shadow: 0 8px 18px rgba(182,49,32,.12); }
 
-  /* SECTIONS */
+  .content-panel {
+    display: grid;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .panel-block {
+    padding: 15px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(66,38,5,.11);
+  }
+
   .sect-label {
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted); font-weight: 600; margin-bottom: 7px; margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #5f3e10;
+    font-weight: 1000;
+    margin-bottom: 10px;
   }
-  .quest-desc { font-size: 15px; line-height: 1.65; color: #555048; }
+  .quest-desc { font-size: clamp(15px, 4vw, 17px); line-height: 1.62; color: #4a3515; font-weight: 550; }
 
-  /* GOALS */
-  .goals-list { list-style: none; }
+  .goals-list { list-style: none; display: grid; gap: 9px; }
   .goal-item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 11px 0; border-bottom: 1px solid var(--border);
-    cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 11px;
+    border: 1px solid rgba(66,38,5,.1);
+    border-radius: 16px;
+    background: rgba(255,248,225,.62);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
-  .goal-item:last-child { border-bottom: none; }
   .goal-check {
-    width: 21px; height: 21px; border: 1.5px solid #c8c0b8;
-    border-radius: 5px; flex-shrink: 0; margin-top: 1px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; background: var(--surface);
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(65,42,9,.25);
+    border-radius: 9px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+    background: #fffaf0;
   }
-  .goal-item.checked .goal-check { background: var(--easy); border-color: var(--easy); }
+  .goal-item.checked { background: #e5faee; border-color: rgba(21,115,71,.22); }
+  .goal-item.checked .goal-check { background: var(--green); border-color: var(--green); }
   .goal-item.checked .goal-check::after {
-    content: ''; width: 5px; height: 9px;
-    border-right: 2px solid #fff; border-bottom: 2px solid #fff;
-    transform: rotate(45deg) translate(-1px,-1px); display: block;
+    content: "";
+    width: 6px;
+    height: 11px;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(45deg) translate(-1px,-1px);
+    display: block;
   }
-  .goal-item.checked .goal-text { color: #b0a898; text-decoration: line-through; text-decoration-color: #c8c0b8; }
-  .goal-text { font-size: 14px; line-height: 1.55; color: var(--text); transition: color 0.15s; }
+  .goal-item.checked .goal-text { color: rgba(74,53,21,.55); text-decoration: line-through; text-decoration-thickness: 2px; }
+  .goal-text { font-size: clamp(14px, 3.8vw, 16px); line-height: 1.45; color: var(--text); font-weight: 650; }
 
-  /* REWARD / PENALTY */
-  .rp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
-  .rp-box { border-radius: 8px; padding: 13px; border: 1px solid var(--border); background: var(--surface); }
-  .rp-box.reward  { border-color: #c0dcc0; background: #f0f8f0; }
-  .rp-box.penalty { border-color: #e0b8a8; background: #fdf4f0; }
-  .rp-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
-  .rp-box.reward  .rp-label { color: var(--easy); }
-  .rp-box.penalty .rp-label { color: var(--hard); }
-  .rp-text { font-size: 13px; line-height: 1.55; color: #666058; }
+  .rp-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 4px; }
+  .rp-box { border-radius: 19px; padding: 14px; border: 1px solid rgba(66,38,5,.13); background: rgba(255,255,255,.62); }
+  .rp-box.reward  { border-color: rgba(21,115,71,.24); background: linear-gradient(135deg, #e8faef, rgba(255,255,255,.72)); }
+  .rp-box.penalty { border-color: rgba(182,49,32,.24); background: linear-gradient(135deg, #ffe6de, rgba(255,255,255,.72)); }
+  .rp-label { font-size: 11px; font-weight: 1000; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 7px; }
+  .rp-box.reward  .rp-label { color: var(--green); }
+  .rp-box.penalty .rp-label { color: var(--red); }
+  .rp-text { font-size: clamp(14px, 3.8vw, 16px); line-height: 1.48; color: #4d3714; font-weight: 650; }
 
-  /* BOTTOM NAV */
+
+  .tip-box {
+    margin-top: 2px;
+    padding: 14px 15px;
+    border-radius: 20px;
+    border: 1px solid rgba(246,181,31,.35);
+    background:
+      linear-gradient(135deg, rgba(255,223,115,.44), rgba(255,255,255,.58)),
+      radial-gradient(circle at 94% 0%, rgba(246,181,31,.38), transparent 30%);
+    box-shadow: inset 0 -2px 0 rgba(92,55,0,.07);
+  }
+  .tip-text {
+    font-size: clamp(14px, 3.8vw, 16px);
+    line-height: 1.48;
+    color: #4d3714;
+    font-weight: 750;
+  }
+
   #bottomnav {
-    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 20px; padding-bottom: max(12px, env(safe-area-inset-bottom));
-    border-top: 1px solid var(--border); background: var(--bg);
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: 52px 1fr 52px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px clamp(14px, 4vw, 28px);
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    color: #fff8dc;
   }
   .nav-btn {
-    width: 44px; height: 44px; border: 1.5px solid var(--border);
-    border-radius: 10px; background: var(--surface); color: var(--text);
-    font-size: 18px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all 0.15s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(255,255,255,.32);
+    border-radius: 19px;
+    background: linear-gradient(180deg, #fff5c8, var(--beer));
+    color: #291704;
+    font-size: 22px;
+    font-weight: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .15s, opacity .15s;
+    box-shadow: 0 10px 24px rgba(0,0,0,.24), inset 0 -3px 0 rgba(92,55,0,.16);
   }
-  .nav-btn:active { background: var(--border); }
-  .nav-btn:disabled { opacity: 0.25; pointer-events: none; }
+  .nav-btn:active { transform: scale(.96); }
+  .nav-btn:disabled { opacity: .28; pointer-events: none; }
 
-  #dots { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: 200px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: all 0.2s; cursor: pointer; }
-  .dot.active { background: var(--text); transform: scale(1.3); }
-  .dot.done   { background: var(--easy); }
-  .dot.failed { background: var(--hard); }
+  #dots { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.32);
+    transition: all .2s;
+    cursor: pointer;
+  }
+  .dot.active { width: 24px; background: var(--beer-light); box-shadow: 0 0 0 4px rgba(255,223,115,.14); }
+  .dot.done   { background: #69d092; }
+  .dot.failed { background: #ff7a64; }
 
   #hint {
-    position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
-    background: rgba(255,255,255,0.95); border: 1px solid var(--border);
-    border-radius: 20px; padding: 8px 16px; font-size: 12px; color: var(--muted);
-    pointer-events: none; opacity: 1; transition: opacity 0.5s;
-    white-space: nowrap; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: fixed;
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.34);
+    background: rgba(37,22,5,.78);
+    backdrop-filter: blur(10px);
+    color: #fff0ba;
+    font-size: 12px;
+    font-weight: 850;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity .5s;
+    white-space: nowrap;
+    box-shadow: 0 12px 30px rgba(0,0,0,.24);
   }
   #hint.hidden { opacity: 0; }
+
+  @media (min-width: 640px) {
+    .quest-header { grid-template-columns: 1fr auto; align-items: start; }
+    .rp-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-height: 700px) {
+    .quest-title { font-size: clamp(28px, 8vw, 44px); }
+    .panel-block { padding: 13px; }
+    .quest-card { border-radius: 26px; }
+  }
 </style>
 </head>
 <body>
 <div id="app">
   <div id="topbar">
-    <span class="location">⚔ Rozlučka · Dubrovník</span>
-    <span id="counter"></span>
+    <div class="top-card">
+      <div>
+        <span class="location">⚔ Rozlučka · Dubrovník</span>
+        <span class="motto">Piwo je moje paliwo</span>
+      </div>
+      <span id="counter"></span>
+    </div>
   </div>
   <div id="slider-wrap"><div id="slider"></div></div>
   <div id="bottomnav">
@@ -159,7 +402,7 @@
     <button class="nav-btn" id="btn-next">→</button>
   </div>
 </div>
-<div id="hint">← přejeď prstem →</div>
+<div id="hint">← swipuj pro další quest →</div>
 
 <script>
 const QUESTS = [
@@ -168,70 +411,80 @@ const QUESTS = [
     desc:"Ženich musí navázat rozhovor s náhodným cizincem v baru, říct mu že slaví rozlučku, a vypít s ním jedno pivo. Musí zjistit aspoň tři věci: jméno, odkud je a proč je v Dubrovníku.",
     goals:["Přijít za cizincem sám od sebe — parta ho nesmí nasměrovat","Dovědět se jméno, zemi původu a důvod návštěvy","Společné foto s cizincem jako důkaz"],
     reward:"Ženich neplatí po zbytek večera za sebe drinky.",
-    penalty:"Platí kolo pro celou partu."
+    penalty:"Platí kolo pro celou partu.",
+    tip:"Když si nepamatuješ jeho jméno po třiceti sekundách, říkej mu Krzysztof."
   },
   {
     num:2, title:"Strážce hradeb", diff:"snadný",
     desc:'Na starém městě musí ženich najít nejstarší viditelný nápis nebo znak na zdi, vyfotit ho a před celou partou improvizovat 120 vteřin o jeho "historii" — smyšlené i pravdivé detaily jsou povoleny.',
     goals:["Najít a zdokumentovat historický nápis nebo erb","Vydržet mluvit bez přestávky celých 120 sekund","Nadpoloviční většina party palcem nahoru = splněno"],
     reward:"Ženich si vybírá restauraci a neplatí — zve ho skupina.",
-    penalty:'Nosí turistický kýč po zbytek dne (sandále v ponožkách, triko "I ❤ Dubrovnik", ledvinka apod.).'
+    penalty:'Nosí turistický kýč po zbytek dne (sandále v ponožkách, triko "I ❤ Dubrovnik", ledvinka apod.).',
+    tip:"Čím sebevědoměji lžeš o historii, tím víc zníš jako skutečný průvodce."
   },
   {
     num:3, title:"Turistický průvodce", diff:"snadný",
     desc:"Ženich musí přistoupit k turistické skupině nebo rodině a nabídnout se jako bezplatný fotograf. Musí nafotit aspoň pět fotek, všechny jim ukázat a popsat historii místa (smyšleně, nebo pravdivě).",
     goals:["Skupina musí mít aspoň 3 lidi","Nafotit aspoň 5 fotek a ukázat je turistům na displeji","Přednést historii o místě"],
     reward:'Ženich si vybere jednoho člena party, který ho musí po zbytek dne oslovovat výhradně "pane průvodce".',
-    penalty:"Při příští zastávce musí ženich požádat obsluhu o doporučení na nejlepší místní specialitu a bez odmlouvání si ji objednat."
+    penalty:"Při příští zastávce musí ženich požádat obsluhu o doporučení na nejlepší místní specialitu a bez odmlouvání si ji objednat.",
+    tip:"Když nevíš, kam ukazovat, ukazuj směrem k moři. Turisti to většinou berou jako lokální znalost."
   },
   {
     num:4, title:"Pouliční zpěvák", diff:"střední",
     desc:"Ženich musí zastavit náhodného chodce, říct mu že slaví rozlučku, a požádat ho aby mu zazpíval nebo zahvízdal jakoukoli píseň. Cizinec musí skutečně zpívat — ne jen broukat.",
     goals:["Cizinec zpívá nebo hvízdá sám od sebe, aspoň 10 sekund","Ženich mu po skončení zatleská a poděkuje česky","Video jako důkaz — celé zachyceno na kameru"],
     reward:"Vybírá příští zastávku na večer a neplatí alkohol.",
-    penalty:"Musí sám zazpívat nahlas na ulici před celou partou."
+    penalty:"Musí sám zazpívat nahlas na ulici před celou partou.",
+    tip:"Pamatuj: člověk, který souhlasí se zpěvem pro cizího Poláka v Dubrovníku, je už dávno na stejné vlně jako vaše parta."
   },
   {
     num:5, title:"Milostný dopis", diff:"střední",
     desc:"Ženich musí přesvědčit náhodného cizince, aby namluvil nebo napsal krátký vzkaz nevěstě — jako by ji sám znal. Cizinec může říct cokoliv, ale musí to být aspoň tři věty.",
     goals:["Cizinec mluví nebo píše sám — ženich jen zadá téma","Vzkaz musí obsahovat aspoň 3 věty o nevěstě nebo manželství","Vzkaz skutečně odeslán nevěstě ihned po natočení"],
     reward:"Ženich vybírá fotografii z dne, kterou pošle nevěstě.",
-    penalty:"Parta vybírá jednu fotografii ze dne, kterou pošlou nevěstě."
+    penalty:"Parta vybírá jednu fotografii ze dne, kterou pošlou nevěstě.",
+    tip:"Pokud cizinec začne dávat manželské rady, nahrávej všechno. To je materiál na výročí."
   },
   {
     num:6, title:"Námořní legenda", diff:"střední",
     desc:"U přístavu musí ženich zastavit kohokoliv kdo vypadá jako místní a zeptat se na legendu nebo příběh spojený s Dubrovníkem — jako by dělal reportáž. Musí aktivně poslouchat aspoň 2 minuty.",
     goals:["Dotyčný musí mluvit aspoň 2 minuty v kuse","Ženich nesmí přerušit ani odbočit jinam","Po skončení shrne příběh partě vlastními slovy — parta hlasuje o věrnosti"],
     reward:"Titul Kapitán přístavu — může jednou kdykoliv zrušit nebo změnit libovolný plán skupiny bez hlasování.",
-    penalty:"Musí si sednout k náhodnému obsazenému stolu s cizími lidmi a přednést vlastní vymyšlenou legendu o Dubrovníku — minimálně 60 sekund. Parta sleduje z bezpečné vzdálenosti."
+    penalty:"Musí si sednout k náhodnému obsazenému stolu s cizími lidmi a přednést vlastní vymyšlenou legendu o Dubrovníku — minimálně 60 sekund. Parta sleduje z bezpečné vzdálenosti.",
+    tip:"Každý příběh je lepší, když obsahuje loď, piráta a podezřele levné pivo."
   },
   {
     num:7, title:"Rybář z přístavu", diff:"těžký",
     desc:"U přístavu musí ženich najít místního prodejce nebo rybáře a koupit od něj jednu rybičku nebo mořský plod — za nejlepší vyjednanou cenu. Parta hlasuje jestli byl obchod výhodný.",
     goals:["Skutečná transakce — jen povídání nestačí","Musí zkusit smlouvat — aspoň jeden protiargument prodejci","Koupenou věc sní na místě (pokud je to bezpečné)"],
     reward:"Zbytek party za něj platí večeři/oběd.",
-    penalty:"Večeři si platí sám."
+    penalty:"Večeři si platí sám.",
+    tip:"Pokud ryba stojí víc než pivo, pravděpodobně vyjednáváš špatně."
   },
   {
     num:8, title:"Básník z nábřeží", diff:"těžký",
     desc:"Ženich dostane 10 minut napsat čtyřřádkovou báseň o nevěstě — na místě, bez pomoci telefonu. Pak ji musí přečíst nahlas celé partě. Parta hlasuje o kvalitě.",
     goals:["Aspoň 4 řádky, téma musí být nevěsta nebo vztah","Přečteno nahlas před celou partou — ne potichu pro sebe","Pokud parta uzná za vhodné, báseň se ihned odesílá nevěstě"],
     reward:"Titul Básník rozlučky na zbytek dne + ženich vybírá fotografii, kterou pošle nevěstě.",
-    penalty:"Odmítne-li číst nahlas — sežene dočasnou tetovačku (ze žvýkačky, suvenýrů...) a natetuje si ji viditelně na obličej. Nosí ji celý zbytek dne."
+    penalty:"Odmítne-li číst nahlas — sežene dočasnou tetovačku (ze žvýkačky, suvenýrů...) a natetuje si ji viditelně na obličej. Nosí ji celý zbytek dne.",
+    tip:"Rým na láska je povolen jen v případě akutního básnického selhání."
   },
   {
     num:9, title:"Vzkaz nevěstě", diff:"těžký",
     desc:"Ženich musí natočit 30sekundové video pro nevěstu. Musí být jasně poznat, že je v Chorvatsku — bez toho aby to říkal (moře, hradby, střechy starého města v záběru). Video musí obsahovat vyznání lásky a jednu konkrétní společnou vzpomínku.",
     goals:["Video natočené živě před celou partou — žádné střihy ani opakování","Chorvatsko musí být v záběru bez komentáře — parta rozhoduje","Zmínit konkrétní vzpomínku, ne jen obecné fráze"],
     reward:"Titul Dubrovnický Romantik — celý zbytek dne neplatí absolutně nic, vše hradí parta.",
-    penalty:"Odmítne-li natočit — platí partě rundu a parta vybírá fotografii, kterou pošlou nevěstě."
+    penalty:"Odmítne-li natočit — platí partě rundu a parta vybírá fotografii, kterou pošlou nevěstě.",
+    tip:"Čím víc emocí, tím menší šance, že video někdo pustí na rodinné oslavě. Což je dobře."
   },
   {
     num:10, title:"Sucking Fucking, no problem", diff:"final",
     desc:"Inspirováno Budapeští. Ženich musí najít pouliční prodejce nebo stánkaře a navázat přátelský rozhovor aspoň na 120 sekund — o životě, počasí, rodině. Teprve pak začne smlouvat cenu libovolného zboží. Musí vyjednat aspoň 20% slevu. Zboží pak skutečně koupí — musí to být něco trvalého jako vzpomínka na rozlučku (soška, magnetka, krýgl, přívěsek apod.).",
     goals:["Nejdřív přátelský rozhovor — žádné smlouvání prvních 120 sekund","Aspoň 3 pokusy o vyjednání slevy — nestačí se zeptat jednou","Dosáhne-li 20% slevy, quest splněn. Nedosáhne-li, zboží přesto koupí za plnou cenu"],
     reward:"Legenda rozlučky — titul Dubrovnický Vyjednávač + vybere libovolné fotografie, které se pošlou nevěstě.",
-    penalty:"Koupí daný předmět každému z party + každý vybere jednu fotografii z celé rozlučky a pošlou se nevěstě."
+    penalty:"Koupí daný předmět každému z party + každý vybere jednu fotografii z celé rozlučky a pošlou se nevěstě.",
+    tip:"Nejdřív kamarád, potom zákazník. Přesně tak vznikají nejlepší slevy a nejhorší účtenky."
   }
 ];
 
@@ -254,24 +507,38 @@ function html(q, i) {
       <span class="goal-text">${g}</span>
     </li>`).join('');
   return `
-    <div class="quest-meta">${isFinal?'⚔ Final Quest':`Sidequest ${q.num}`} · Rozlučka Dubrovník</div>
-    <div class="quest-header">
-      <div class="quest-title">${q.title}</div>
-      <span class="diff-badge diff-${DC[q.diff]}">${DL[q.diff]}</span>
-    </div>
-    <div class="result-row">
-      <button class="result-btn${s.result==='done'?' active-done':''}" data-q="${i}" data-r="done">✓ Splněno</button>
-      <button class="result-btn${s.result==='fail'?' active-fail':''}" data-q="${i}" data-r="fail">✗ Nesplněno</button>
-    </div>
-    <div class="sect-label">Popis úkolu</div>
-    <p class="quest-desc">${q.desc}</p>
-    <div class="sect-label">Cíle</div>
-    <ul class="goals-list">${goals}</ul>
-    <div class="sect-label">Odměna &amp; trest</div>
-    <div class="rp-grid">
-      <div class="rp-box reward"><div class="rp-label">🏆 Odměna</div><div class="rp-text">${q.reward}</div></div>
-      <div class="rp-box penalty"><div class="rp-label">💀 Trest</div><div class="rp-text">${q.penalty}</div></div>
-    </div>`;
+    <article class="quest-card">
+      <div class="quest-meta">${isFinal?'🍺 Poslední výzva':`🍻 Sidequest ${q.num}`}</div>
+      <div class="quest-header">
+        <div class="quest-title">${q.title}</div>
+        <span class="diff-badge diff-${DC[q.diff]}">${DL[q.diff]}</span>
+      </div>
+      <div class="result-row">
+        <button class="result-btn${s.result==='done'?' active-done':''}" data-q="${i}" data-r="done">✓ Splněno</button>
+        <button class="result-btn${s.result==='fail'?' active-fail':''}" data-q="${i}" data-r="fail">✗ Nesplněno</button>
+      </div>
+      <div class="content-panel">
+        <section class="panel-block">
+          <div class="sect-label">📜 Zadání</div>
+          <p class="quest-desc">${q.desc}</p>
+        </section>
+        <section class="panel-block tip-box">
+          <div class="sect-label">🍺 Tip</div>
+          <p class="tip-text">${q.tip}</p>
+        </section>
+        <section class="panel-block">
+          <div class="sect-label">🎯 Podmínky splnění</div>
+          <ul class="goals-list">${goals}</ul>
+        </section>
+        <section class="panel-block">
+          <div class="sect-label">⚖️ Výsledek</div>
+          <div class="rp-grid">
+            <div class="rp-box reward"><div class="rp-label">🏆 Odměna</div><div class="rp-text">${q.reward}</div></div>
+            <div class="rp-box penalty"><div class="rp-label">💀 Trest</div><div class="rp-text">${q.penalty}</div></div>
+          </div>
+        </section>
+      </div>
+    </article>`;
 }
 
 function build() {
