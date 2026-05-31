@@ -407,15 +407,7 @@
 <script>
 const QUESTS = [
   {
-    num:1, title:"Víno s cizincem", diff:"snadný",
-    desc:"Ženich musí navázat rozhovor s náhodným cizincem v baru, říct mu že slaví rozlučku, a vypít s ním jedno pivo. Musí zjistit aspoň tři věci: jméno, odkud je a proč je v Dubrovníku.",
-    goals:["Přijít za cizincem sám od sebe — parta ho nesmí nasměrovat","Dovědět se jméno, zemi původu a důvod návštěvy","Společné foto s cizincem jako důkaz"],
-    reward:"Ženich neplatí po zbytek večera za sebe drinky.",
-    penalty:"Platí kolo pro celou partu.",
-    tip:"Když si nepamatuješ jeho jméno po třiceti sekundách, říkej mu Krzysztof."
-  },
-  {
-    num:2, title:"Strážce hradeb", diff:"snadný",
+    num:1, title:"Strážce hradeb", diff:"snadný",
     desc:'Na starém městě musí ženich najít nejstarší viditelný nápis nebo znak na zdi, vyfotit ho a před celou partou improvizovat 120 vteřin o jeho "historii" — smyšlené i pravdivé detaily jsou povoleny.',
     goals:["Najít a zdokumentovat historický nápis nebo erb","Vydržet mluvit bez přestávky celých 120 sekund","Nadpoloviční většina party palcem nahoru = splněno"],
     reward:"Ženich si vybírá restauraci a neplatí — zve ho skupina.",
@@ -423,12 +415,20 @@ const QUESTS = [
     tip:"Čím sebevědoměji lžeš o historii, tím víc zníš jako skutečný průvodce."
   },
   {
-    num:3, title:"Turistický průvodce", diff:"snadný",
+    num:2, title:"Turistický průvodce", diff:"snadný",
     desc:"Ženich musí přistoupit k turistické skupině nebo rodině a nabídnout se jako bezplatný fotograf. Musí nafotit aspoň pět fotek, všechny jim ukázat a popsat historii místa (smyšleně, nebo pravdivě).",
     goals:["Skupina musí mít aspoň 3 lidi","Nafotit aspoň 5 fotek a ukázat je turistům na displeji","Přednést historii o místě"],
     reward:'Ženich si vybere jednoho člena party, který ho musí po zbytek dne oslovovat výhradně "pane průvodce".',
     penalty:"Při příští zastávce musí ženich požádat obsluhu o doporučení na nejlepší místní specialitu a bez odmlouvání si ji objednat.",
     tip:"Když nevíš, kam ukazovat, ukazuj směrem k moři. Turisti to většinou berou jako lokální znalost."
+  },
+  {
+    num:3, title:"Víno s cizincem", diff:"snadný",
+    desc:"Ženich musí navázat rozhovor s náhodným cizincem v baru, říct mu že slaví rozlučku, a vypít s ním jedno pivo. Musí zjistit aspoň tři věci: jméno, odkud je a proč je v Dubrovníku.",
+    goals:["Přijít za cizincem sám od sebe — parta ho nesmí nasměrovat","Dovědět se jméno, zemi původu a důvod návštěvy","Společné foto s cizincem jako důkaz"],
+    reward:"Ženich neplatí po zbytek večera za sebe drinky.",
+    penalty:"Platí kolo pro celou partu.",
+    tip:"Když si nepamatuješ jeho jméno po třiceti sekundách, říkej mu Krzysztof."
   },
   {
     num:4, title:"Pouliční zpěvák", diff:"střední",
